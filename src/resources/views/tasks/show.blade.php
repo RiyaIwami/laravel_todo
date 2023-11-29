@@ -28,6 +28,10 @@
 </style>
 <h1>タスク詳細</h1>
 <div class="container">
+@if ($task == null)
+<div>no data</div>
+@else
+
     <table>
         <tr>
             <th>ID</th>
@@ -65,3 +69,5 @@
         </div>
     </div>
 </div>
+
+@endif

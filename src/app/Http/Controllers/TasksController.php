@@ -32,6 +32,7 @@ class TasksController extends Controller
      */
     public function add()
     {
+
         return view('tasks.add');
     }
 
