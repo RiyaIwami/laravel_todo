@@ -15,9 +15,12 @@ class CreateTasksTable extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->string('name', 30);
             $table->text('content');
             $table->timestamps(); // これでcreated_atとupdated_atが作成されます。
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

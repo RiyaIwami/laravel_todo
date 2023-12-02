@@ -15,30 +15,29 @@ use App\Http\Controllers\UsersController;
 |
 */
 
-//１、groupを作る　　　　　　, function() {} これも忘れないで！
-//2、preixとasを設定
+//１、groupを作る、function() {} これも忘れないで！
+//2、prefixとasを設定
 //3、/usersのrouteをgroup内に入れる
-//4、3のrouteを変更する。 ！！！！！！！！！ここができてないかな！！！！！！
+//4、3のrouteを変更する。
 //５、3の元のrouteを削除
 
-Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
-    Route::get('/',[UsersController::class,'registration'])->name('registration');
+Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth']], function () {
+    //
+    Route::post('/update/{id}', [UsersController::class, 'update'])->name('update');
+    Route::get('/edit/{id}', [UsersController::class, 'edit'])->name('edit');
 });
-// なんでこうなったかわかった？
-// routeの変更と削除する意味があんまりよくわからないですの変更と削除する意味があんまりよくわからないですよくわからないです
-//routeの変更はgroup内に元のroute内容をそのまま書くと、groupでパスとnameを path = /users と name = users. になる
-//だから元のを変更しないと path = /users/users と　name = users.users.registration になってしまうから。
-//削除するのはgroup内に元のrouteの設定をしたのに、元のコードがあると重複してしまうから。
-//ということだけどわかるかな？？
 
-//groupとするとなかのrouteに対して先頭にまとめてパスとnameを付け足せる
-//prefixって書いてあるのが、URLのパスの部分
-//asがnameの部分
-//なので、このグループ内にはパスの先頭に/tasksってついてnameの先頭にtasks.っていうのが付くようになってる
-Route::group(['prefix' => 'tasks', 'as' => 'tasks.'], function() {
-    Route::get('/', [TasksController::class, 'index'])->name('index');
-    // 詳細ページ
-    Route::get('/{id}', [TasksController::class, 'show'])->name('show');
+Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
+    //　一覧
+    Route::get('/', [UsersController::class, 'list'])->name('list');
+});
+
+// route　groupで middleware => '[auth']と追加するとログイン後でしか使えなくできる
+// もしログインしてなくても見えるようにしたかったら別のグループにまとめてmiddlewareを設定しない！
+
+//今の設定すると、ログインしてなかったら指定した場所に飛ばせる。別のグループにまとめるというのは、インスタとか投稿見れるけど、ログインしてないと投稿とかできないのと同じ
+
+Route::group(['prefix' => 'tasks', 'as' => 'tasks.', 'middleware' => ['auth']], function() {
     // タスク追加
     Route::get('/add', [TasksController::class, 'add'])->name('add');
     // タスク追加-DBに値を入れる処理
@@ -47,6 +46,19 @@ Route::group(['prefix' => 'tasks', 'as' => 'tasks.'], function() {
     Route::get('/edit/{id}', [TasksController::class, 'edit'])->name('edit');
     // タスク更新処理
     Route::post('/edit/{id}', [TasksController::class, 'update'])->name('update');
-
+    //タスク削除
     Route::post('/delete/{id}', [TasksController::class, 'delete'])->name('delete');
 });
+
+Route::group(['prefix' => 'tasks', 'as' => 'tasks.'], function () {
+    // タスク表示
+    Route::get('/', [TasksController::class, 'index'])->name('index');
+    // 詳細ページ
+    Route::get('/{id}', [TasksController::class, 'show'])->name('show');
+});
+
+//ここは自動的に生成された認証のコードのまとめやからカスタマイズしないならこのままで、実務ではもっとカスタマイズする
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//

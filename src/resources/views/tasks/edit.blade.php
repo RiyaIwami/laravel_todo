@@ -31,7 +31,7 @@
 <h1>タスク編集</h1>
 <div class="error">
     @foreach ($errors->all() as $error)
-      <p class="error__message">{{$error}}</p>
+        <p class="error__message">{{$error}}</p>
     @endforeach
 </div>
 <form action="{{ route('tasks.update', ['id' => $task->id]) }}" method="POST" class="form">

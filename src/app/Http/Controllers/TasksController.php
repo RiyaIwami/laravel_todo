@@ -5,9 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Task;
 use App\Http\Requests\TaskRequest;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class TasksController extends Controller
 {
+    protected $redirectTo = RouteServiceProvider::HOME;
+
     /**
      * 一覧画面
      */
@@ -24,6 +29,7 @@ class TasksController extends Controller
     public function show($id)
     {
         $task = Task::find($id);
+        // $user = $task->user();
         return view('tasks.show', compact('task'));
     }
 
@@ -41,10 +47,14 @@ class TasksController extends Controller
      */
     public function store(TaskRequest $request)
     {
-        // tasksテーブルにフォームで入力した値を挿入する
+        $userId = Auth::id();
+        $user = User::first($userId);
+        // tasksテーブルにフォームで入力した値を挿入す
+        // $tasks = $user->tasks();
         $result = Task::create([
             'name' => $request->name,
             'content' => $request->content,
+            'user_id'=> $user->id
         ]);
 
         // タスク一覧画面にリダイレクト
