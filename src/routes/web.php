@@ -22,9 +22,12 @@ use App\Http\Controllers\UsersController;
 //５、3の元のrouteを削除
 
 Route::group(['prefix' => 'users', 'as' => 'users.', 'middleware' => ['auth']], function () {
-    //
-    Route::post('/update/{id}', [UsersController::class, 'update'])->name('update');
+    //編集
     Route::get('/edit/{id}', [UsersController::class, 'edit'])->name('edit');
+    // 更新
+    Route::post('/update/{id}', [UsersController::class, 'update'])->name('update');
+    // 削除
+    Route:: post('/delete/{id}',[UsersController::class,'delete'])->name('delete');
 });
 
 Route::group(['prefix' => 'users', 'as' => 'users.'], function () {

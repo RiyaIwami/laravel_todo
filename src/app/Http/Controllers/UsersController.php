@@ -30,4 +30,10 @@ class UsersController extends Controller
         ]);
         return view('users.edit')->with(['user' => $user]);
     }
+
+    public function delete($id)
+    {
+        $user = User::destroy($id);
+        return redirect()->route('users.list');
+    }
 }

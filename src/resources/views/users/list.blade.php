@@ -25,6 +25,12 @@
         padding: 10px 0 10px 6px;
         text-align: center;
     }
+
+    form {
+        display:inline-block;
+    }
+
+
     a {
         margin-right: 20px;
     }
@@ -46,7 +52,10 @@
             @auth
             <td>
                 <a href="{{ route('users.edit', ['id' => $user->id]) }}">編集</a>
-                <a href="">削除</a>
+                <form action="{{ route('users.delete', ['id' => $user->id]) }}" method="POST" name="deleteForm">
+                @csrf
+                    <button type="submit">削除</button>
+                </form>
             </td>
             @endauth
         </tr>
